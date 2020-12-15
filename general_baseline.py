@@ -1,27 +1,18 @@
-#!/usr/bin/python
-#  -*- coding: utf-8 -*-
-# date: 2018
-# author: Kang Yan Zhe
+# utf-8
+# reviser：wfxu
+# revision date: 2020-12-15
 
 import csv
-import time
 import pandas as pd
 import numpy as np
 from scipy import interp
-from math import isnan
 import matplotlib.pyplot as plt
 from itertools import cycle
-from sklearn.feature_selection import SelectKBest
-from sklearn.feature_selection import f_classif
 from sklearn.feature_selection import SelectFromModel
-from sklearn.model_selection import train_test_split
 from sklearn.model_selection import StratifiedKFold
-from sklearn.model_selection import GridSearchCV
-from sklearn.linear_model import LogisticRegression
-from sklearn.ensemble import RandomForestClassifier
 from sklearn.ensemble import GradientBoostingClassifier
 from sklearn.metrics import roc_curve, auc, f1_score
-from sklearn.externals import joblib
+import joblib
 from xgboost import XGBClassifier
 from lightgbm import LGBMClassifier
 
@@ -41,15 +32,15 @@ def gbdt_feature_selection(fe_name, matrix_x_temp, label_y, th):
     for k in feature_score_dict:
         if feature_score_dict[k] == 0.0:
             m += 1
-    print 'number of not-zero features:' + str(len(feature_score_dict) - m)
+    print('number of not-zero features:' + str(len(feature_score_dict) - m))
 
     # feature importance
     feature_score_dict_sorted = sorted(feature_score_dict.items(),
                                        key=lambda d: d[1], reverse=True)
-    print 'feature_importance:'
+    print('feature_importance:')
     for ii in range(len(feature_score_dict_sorted)):
-        print feature_score_dict_sorted[ii][0], feature_score_dict_sorted[ii][1]
-    print '\n'
+        print(feature_score_dict_sorted[ii][0], feature_score_dict_sorted[ii][1])
+    print('\n')
 
     f = open('../eda/gbdt_feature_importance.txt', 'w')
     f.write('Rank\tFeature Name\tFeature Importance\n')
@@ -63,10 +54,10 @@ def gbdt_feature_selection(fe_name, matrix_x_temp, label_y, th):
     feature_used_name = []
     for ii in range(len(feature_used_dict_temp)):
         feature_used_name.append(feature_used_dict_temp[ii][0])
-    print 'feature_chooesed:'
+    print('feature_chooesed:')
     for ii in range(len(feature_used_name)):
-        print feature_used_name[ii]
-    print '\n'
+        print(feature_used_name[ii])
+    print('\n')
 
     f = open('../eda/gbdt_feature_chose.txt', 'w')
     f.write('Feature Chose Name :\n')
@@ -98,15 +89,15 @@ def lgb_feature_selection(fe_name, matrix_x_temp, label_y, th):
     for k in feature_score_dict:
         if feature_score_dict[k] == 0.0:
             m += 1
-    print 'number of not-zero features:' + str(len(feature_score_dict) - m)
+    print('number of not-zero features:' + str(len(feature_score_dict) - m))
 
     # 打印出特征重要性
     feature_score_dict_sorted = sorted(feature_score_dict.items(),
                                        key=lambda d: d[1], reverse=True)
-    print 'feature_importance:'
+    print('feature_importance:')
     for ii in range(len(feature_score_dict_sorted)):
-        print feature_score_dict_sorted[ii][0], feature_score_dict_sorted[ii][1]
-    print '\n'
+        print(feature_score_dict_sorted[ii][0], feature_score_dict_sorted[ii][1])
+    print('\n')
 
     f = open('../eda/lgb_feature_importance.txt', 'w')
     f.write('Rank\tFeature Name\tFeature Importance\n')
@@ -120,10 +111,10 @@ def lgb_feature_selection(fe_name, matrix_x_temp, label_y, th):
     feature_used_name = []
     for ii in range(len(feature_used_dict_temp)):
         feature_used_name.append(feature_used_dict_temp[ii][0])
-    print 'feature_chooesed:'
+    print('feature_chooesed:')
     for ii in range(len(feature_used_name)):
-        print feature_used_name[ii]
-    print '\n'
+        print(feature_used_name[ii])
+    print('\n')
 
     f = open('../eda/lgb_feature_chose.txt', 'w')
     f.write('Feature Chose Name :\n')
@@ -145,10 +136,10 @@ def lgb_feature_selection(fe_name, matrix_x_temp, label_y, th):
             chromosome_temp += '1'
         else:
             chromosome_temp += '0'
-    print 'Chromosome:'
-    print chromosome_temp
+    print('Chromosome:')
+    print(chromosome_temp)
     joblib.dump(chromosome_temp, '../config/chromosome.pkl')
-    print '\n'
+    print('\n')
     return matrix_x, feature_not_used_name[:], len(feature_used_name)
 
 
@@ -167,15 +158,15 @@ def xgb_feature_selection(fe_name, matrix_x_temp, label_y, th):
     for k in feature_score_dict:
         if feature_score_dict[k] == 0.0:
             m += 1
-    print 'number of not-zero features:' + str(len(feature_score_dict) - m)
+    print('number of not-zero features:' + str(len(feature_score_dict) - m))
 
     # 打印出特征重要性
     feature_score_dict_sorted = sorted(feature_score_dict.items(),
                                        key=lambda d: d[1], reverse=True)
-    print 'xgb_feature_importance:'
+    print('xgb_feature_importance:')
     for ii in range(len(feature_score_dict_sorted)):
-        print feature_score_dict_sorted[ii][0], feature_score_dict_sorted[ii][1]
-    print '\n'
+        print(feature_score_dict_sorted[ii][0], feature_score_dict_sorted[ii][1])
+    print('\n')
 
     f = open('../eda/xgb_feature_importance.txt', 'w')
     f.write('Rank\tFeature Name\tFeature Importance\n')
@@ -189,10 +180,10 @@ def xgb_feature_selection(fe_name, matrix_x_temp, label_y, th):
     feature_used_name = []
     for ii in range(len(feature_used_dict_temp)):
         feature_used_name.append(feature_used_dict_temp[ii][0])
-    print 'feature_chooesed:'
+    print('feature_chooesed:')
     for ii in range(len(feature_used_name)):
-        print feature_used_name[ii]
-    print '\n'
+        print(feature_used_name[ii])
+    print('\n')
 
     f = open('../eda/xgb_feature_chose.txt', 'w')
     f.write('Feature Chose Name :\n')
@@ -214,10 +205,10 @@ def xgb_feature_selection(fe_name, matrix_x_temp, label_y, th):
             chromosome_temp += '1'
         else:
             chromosome_temp += '0'
-    print 'Chromosome:'
-    print chromosome_temp
+    print('Chromosome:')
+    print(chromosome_temp)
     joblib.dump(chromosome_temp, '../config/chromosome.pkl')
-    print '\n'
+    print('\n')
     return matrix_x, feature_not_used_name[:], len(feature_used_name)
 
 
@@ -225,8 +216,8 @@ def data_test_feature_drop(data_test, feature_name_drop):
     # print feature_name_drop
     for col in feature_name_drop:
         data_test.drop(col, axis=1, inplace=True)
-    print "data_test_shape:"
-    print data_test.shape
+    print("data_test_shape:")
+    print(data_test.shape)
     return data_test.as_matrix()
 
 
@@ -241,12 +232,11 @@ def write_predict_results_to_csv(csv_name, uid, prob_list):
         writer.writerows(combined_list)
         csv_file.close()
     else:
-        print 'no和pred的个数不一致'
+        print('no和pred的个数不一致')
 
 
 def xgb_lgb_cv_modeling():
     """
-
     :return:
     """
 
@@ -366,8 +356,8 @@ def xgb_lgb_cv_modeling():
     mean_tpr /= cv.get_n_splits(X, y)
     mean_tpr[-1] = 1.0
     mean_auc = auc(mean_fpr, mean_tpr)
-    print 'mean_auc=' + str(mean_auc)
-    print 'mean_f1=' + str(mean_f1/5)
+    print('mean_auc=' + str(mean_auc))
+    print('mean_f1=' + str(mean_f1/5))
     plt.plot(mean_fpr, mean_tpr, color='g', linestyle='--', label='Mean ROC (area = %0.4f)' % mean_auc, lw=lw)
     plt.xlim([-0.01, 1.01])
     plt.ylim([-0.01, 1.01])
@@ -404,4 +394,3 @@ def xgb_lgb_cv_modeling():
     result_file_name = '../result/pred_result_XL_N_' + str(parameter_n_estimators) + '_features_' + str(len_feature_choose) + \
                        '_proba_to_label_using_th_' + str(th) + '.csv'
     write_predict_results_to_csv(result_file_name, data_predict_user_id, lt.tolist())
-
